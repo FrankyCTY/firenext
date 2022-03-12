@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Img from 'next/image';
 import { useContext } from 'react';
-import { UserContext } from '../lib/context';
+import { UserContext } from '../userContext';
 
 // Top navbar
 export default function Navbar() {

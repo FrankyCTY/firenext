@@ -1,11 +1,11 @@
-import { auth } from '../lib/firebase';
+import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useContext } from 'react';
-import { UserContext } from '../lib/context';
+import { UserContext } from '../userContext';
 
 const googleProvider = new GoogleAuthProvider();
 
-export default function Enter(props) {
+export default function Entry(props) {
   const { user, username } = useContext(UserContext);
 
   // 1. user signed out <SignInButton />
