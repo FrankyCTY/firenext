@@ -1,7 +1,7 @@
 import { postToJSON } from 'firebaseInit';
 import UserProfileSection from 'components/UserProfileSection';
 import PostFeed from 'components/PostFeed';
-import { getUsersPosts, getUserByUsername } from 'services/users';
+import { getUsersPosts, getUserByUsername } from 'services/usersService';
 
 export async function getServerSideProps({ query }) {
   const { username } = query;
@@ -17,7 +17,7 @@ export async function getServerSideProps({ query }) {
     const userDocPath = userDoc.ref.path;
     const queriedPosts = await getUsersPosts(userDocPath);
 
-    posts = queriedPosts.map(postToJSON);
+    posts = queriedPosts.map((doc) => postToJSON(doc.data()));
   }
 
   return {

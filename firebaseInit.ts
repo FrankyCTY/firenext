@@ -21,12 +21,11 @@ export const firestore = getFirestore(firebaseApp);
  * Converts a firestore document to JSON
  * @param  {DocumentSnapshot} doc
  */
-export function postToJSON(doc) {
-  const data = doc.data();
+export function postToJSON(post) {
   return {
-    ...data,
+    ...post,
     // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
-    createdAt: data.createdAt.toMillis(),
-    updatedAt: data.updatedAt.toMillis(),
+    createdAt: post.createdAt.toMillis(),
+    updatedAt: post.updatedAt.toMillis(),
   };
 }

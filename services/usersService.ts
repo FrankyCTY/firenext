@@ -1,4 +1,4 @@
-import { firestore, postToJSON } from 'firebaseInit';
+import { firestore } from 'firebaseInit';
 import {
   collection,
   getDocs,
@@ -12,13 +12,13 @@ interface QueryOptions {
   qLimit?: number;
 }
 
-const collectionName = 'users';
+const rootCollectionName = 'users';
 
 /**`
  * Gets a users/{uid} document with username
  */
 export async function getUserByUsername(username: string) {
-  const usersRef = collection(firestore, collectionName);
+  const usersRef = collection(firestore, rootCollectionName);
 
   const q = query(usersRef, where('username', '==', username));
   const qSnapshot = await getDocs(q);
