@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import Navbar from 'components/Navbar';
 import { Toaster } from 'react-hot-toast';
 import { UserContext } from 'userContext';
-import { useUserData } from 'hooks';
+import { useUserData } from 'useUserData';
 
 function MyApp({ Component, pageProps }) {
   const userData = useUserData();

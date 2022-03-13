@@ -1,7 +1,8 @@
-import { auth } from '../firebase';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth as authInstance } from 'firebaseInit';
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useContext } from 'react';
-import { UserContext } from '../userContext';
+import { UserContext } from 'userContext';
+import UsernameForm from 'pageFragmenets/entry/UsernameForm';
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -13,6 +14,8 @@ export default function Entry(props) {
   // 3. user signed in, has username <SignOutButton />
   return (
     <main>
+      <h1>Sign up for this amazing app!</h1>
+
       {user ? (
         !username ? (
           <UsernameForm />
@@ -29,7 +32,7 @@ export default function Entry(props) {
 // Sign in with Google button
 function SignInButton() {
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleProvider)
+    await signInWithPopup(authInstance, googleProvider)
       .then((user) => {
         console.log(user);
       })
@@ -40,16 +43,12 @@ function SignInButton() {
 
   return (
     <button className="btn-google" onClick={signInWithGoogle}>
-      Sign in with Google
+      <img src={'/google.png'} width="30px" /> Sign in with Google
     </button>
   );
 }
 
 // Sign out button
 function SignOutButton() {
-  return <button onClick={() => auth.signOut()}>Sign Out</button>;
-}
-
-function UsernameForm() {
-  return null;
+  return <button onClick={() => signOut(authInstance)}>Sign Out</button>;
 }

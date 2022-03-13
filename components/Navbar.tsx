@@ -24,16 +24,18 @@ export default function Navbar() {
                 <button className="btn-blue">Write Posts</button>
               </Link>
             </li>
-            <li>
-              <Link passHref href={`/${username}`}>
-                <Img
-                  alt="user photo"
-                  src={'/profile_pic.jpg'}
-                  width="100%"
-                  height="100%"
-                />
-              </Link>
-            </li>
+            {user?.photoURL && (
+              <li>
+                <Link passHref href={`/${username}`}>
+                  <Img
+                    alt="user photo"
+                    src={user?.photoURL}
+                    width="40px"
+                    height="40px"
+                  />
+                </Link>
+              </li>
+            )}
           </>
         )}
 
