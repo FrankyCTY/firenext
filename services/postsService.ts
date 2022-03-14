@@ -2,11 +2,14 @@ import { firestore } from 'firebaseInit';
 import {
   collection,
   collectionGroup,
+  doc,
   getDocs,
   limit,
   orderBy,
   query,
+  setDoc,
   startAfter,
+  Timestamp,
   where,
 } from 'firebase/firestore';
 
@@ -53,4 +56,18 @@ export async function getPosts({
   });
 
   return postDocs;
+}
+
+export async function createPost(userId = 'XsfP4t8XuiTk1t0a0Dot4lZfnHP2') {
+  await setDoc(doc(firestore, 'users', userId, 'posts', 'hello-world'), {
+    content: '# Hello world',
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+    slug: 'hello-world',
+    title: 'Hello world',
+    uid: userId,
+    username: 'franky',
+    heartCount: 10,
+    published: true,
+  });
 }

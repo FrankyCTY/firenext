@@ -1,18 +1,9 @@
-import {
-  collectionGroup,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  where,
-  Timestamp,
-  startAfter,
-} from 'firebase/firestore';
+import { doc, Timestamp, setDoc } from 'firebase/firestore';
 import { firestore, postToJSON } from 'firebaseInit';
 import { useState } from 'react';
 import Loader from 'components/Loader';
 import PostFeed from 'components/PostFeed';
-import { getPosts } from 'services/postsService';
+import { createPost, getPosts } from 'services/postsService';
 
 // Max post to query per page
 const qLimit = 1;
@@ -65,6 +56,13 @@ export default function Home(props) {
 
   return (
     <main>
+      <button
+        onClick={async () => {
+          await createPost();
+        }}
+      >
+        Add post
+      </button>
       <PostFeed posts={posts} />
 
       {!isLoading && !isPostsEnd && (
