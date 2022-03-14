@@ -1,5 +1,5 @@
 import styles from 'styles/Post.module.css';
-import PostContent from 'pageFragmenets/post/PostContent';
+import PostContent from 'components/post/PostContent';
 import { firestore, postToJSON } from 'firebaseInit';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import {

@@ -1,5 +1,5 @@
 import { firestore, postToJSON } from 'firebaseInit';
-import UserProfileSection from 'components/UserProfileSection';
+import UserProfileSection from 'components/userProfile/UserProfileSection';
 import PostFeed from 'components/PostFeed';
 import {
   collection,

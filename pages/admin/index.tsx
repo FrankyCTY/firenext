@@ -1,5 +1,9 @@
-function Admin({ Component, pageProps }) {
-  return <h1>Admin</h1>;
-}
+import AuthCheck from 'components/AuthCheck';
 
-export default Admin;
+export default function AdminPostsPage(props) {
+  return (
+    <main>
+      <AuthCheck></AuthCheck>
+    </main>
+  );
+}

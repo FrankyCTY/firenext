@@ -2,7 +2,7 @@ import { auth as authInstance } from 'firebaseInit';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useContext } from 'react';
 import { UserContext } from 'userContext';
-import UsernameForm from 'pageFragmenets/entry/UsernameForm';
+import UsernameForm from 'components/entry/UsernameForm';
 
 const googleProvider = new GoogleAuthProvider();
 
