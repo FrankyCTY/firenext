@@ -1,14 +1,15 @@
 import styles from 'styles/Post.module.css';
 import PostContent from 'pageFragmenets/post/PostContent';
 import { firestore, postToJSON } from 'firebaseInit';
-import { getUserByUsername } from 'services/usersService';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import {
+  collection,
   collectionGroup,
   doc,
   getDoc,
   getDocs,
   query,
+  where,
 } from 'firebase/firestore';
 import { ParsedUrlQuery } from 'querystring';
 import Metatags from 'components/Metatag';
@@ -23,6 +24,21 @@ interface IParams extends ParsedUrlQuery {
   slug: string;
   username: string;
 }
+
+const getUserByUsername = async (username: string) => {
+  const usersRef = collection(firestore, 'users');
+
+  const q = query(usersRef, where('username', '==', username));
+  const qSnapshot = await getDocs(q);
+
+  let userDoc = null;
+
+  qSnapshot.forEach((doc) => {
+    userDoc = doc;
+  });
+
+  return userDoc;
+};
 
 export async function getStaticProps({ params }: { params: IParams }) {
   const { username, slug } = params;
