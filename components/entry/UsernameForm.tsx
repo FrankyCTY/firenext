@@ -43,8 +43,6 @@ function UsernameForm() {
         const docRef = doc(firestore, `usernames/${username}`);
         const docSnap = await getDoc(docRef);
 
-        console.log('Firestore read executed!');
-
         setIsValid(!docSnap.exists());
         setLoading(false);
       }

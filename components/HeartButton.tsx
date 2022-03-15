@@ -32,8 +32,6 @@ export default function HeartButton({ postRef }) {
     await batch.commit();
   };
 
-  console.log({ hi: heartDoc?.exists });
-
   // Log in user already hearted or not
   return heartDoc?.exists() ? (
     <button onClick={removeHeart}>💔 Unheart</button>

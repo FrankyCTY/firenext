@@ -15,10 +15,7 @@ const PostForm = ({
     defaultValues,
     mode: 'onChange',
   });
-  console.log(
-    '🚀 ~ file: PostForm.tsx ~ line 18 ~ defaultValues',
-    defaultValues
-  );
+
   const { isValid, isDirty } = formState;
 
   const updatePost = async ({ content, published }) => {
