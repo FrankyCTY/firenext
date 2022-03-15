@@ -26,7 +26,6 @@ const CreateNewPost = () => {
     const postRef = doc(firestore, `users/${uid}/posts/${slug}`);
 
     // Tip: give all fields a default value here
-
     await setDoc(postRef, {
       title,
       slug,

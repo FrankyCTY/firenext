@@ -19,12 +19,12 @@ service cloud.firestore {
 
       match /users/{userId}/posts/{postId} {
         allow read;
-        allow read: if canCreatePost(userId);
+        allow create: if canCreatePost(userId);
         allow update: if canUpdatePost(userId) || canIncrementHearts(userId, postId);
         allow delete: if request.auth.uid == userId;
       }
       
-      match /hearts/{heartId} {
+      match /users/{userId}/posts/{postId}/hearts/{heartId} {
         allow read;
         allow write: if request.auth.uid == heartId;
       }
@@ -50,11 +50,11 @@ service cloud.firestore {
       function canCreatePost(userId) {
         let isOwner = request.auth.uid == userId;
         let isCurrentCreatedAt = request.time == request.resource.data.createdAt;
-        let isValidContent = request.resource.data.content.size() < 20000 && request.resource.data.heartCount == 0;
+        // let isValidContent = request.resource.data.content.size() < 20000 && request.resource.data.heartCount == 0;
         let username = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
         let usernameMatches = username == request.resource.data.username;
 
-      	return isOwner && isCurrentCreatedAt && isValidContent && usernameMatches;
+      	return isOwner && isCurrentCreatedAt && usernameMatches;
       }
 
       function canUpdatePost(userId) {
