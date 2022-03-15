@@ -2,8 +2,89 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if
-          request.time < timestamp.date(2022, 8, 11);
+
+      match /posts/{postId} {
+        allow read;
+      }
+
+      match /users/{userId} {
+        allow read;
+        allow create: if isValidUser(userId);
+      }
+
+      match /usernames/{username} {
+        allow read;
+        allow create: if isValidUsername(username);
+      }
+
+      match /users/{userId}/posts/{postId} {
+        allow read;
+        allow read: if canCreatePost(userId);
+        allow update: if canUpdatePost(userId) || canIncrementHearts(userId, postId);
+        allow delete: if request.auth.uid == userId;
+      }
+      
+      match /hearts/{heartId} {
+        allow read;
+        allow write: if request.auth.uid == heartId;
+      }
+
+      function isValidUser(userId) {
+        let isOwner = request.auth.uid == userId;
+        let username = request.resource.data.username;
+        // Check if a document exists, assuming the current request succeeds. Equivalent to getAfter(path) != null.
+        let createdValidUsername = existsAfter(/databases/$(database)/documents/usernames/$(username));
+
+        return isOwner && createdValidUsername;
+      }
+
+      function isValidUsername(username) {
+				let isOwner = request.auth.uid == request.resource.data.uid;
+        let isValidLength = username.size() >= 3 && username.size() <= 15;
+        // getAfter / existsAfter etc. are used for batch operation and assume the operation will be succeeded
+        let isValidUserDoc = getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == username;
+        
+        return isOwner && isValidLength && isValidUserDoc;     
+      }
+
+      function canCreatePost(userId) {
+        let isOwner = request.auth.uid == userId;
+        let isCurrentCreatedAt = request.time == request.resource.data.createdAt;
+        let isValidContent = request.resource.data.content.size() < 20000 && request.resource.data.heartCount == 0;
+        let username = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
+        let usernameMatches = username == request.resource.data.username;
+
+      	return isOwner && isCurrentCreatedAt && isValidContent && usernameMatches;
+      }
+
+      function canUpdatePost(userId) {
+        let isOwner = request.auth.uid == userId;
+      	let isNow = request.time == request.resource.data.updatedAt;
+        let isValidContent = request.resource.data.content.size() < 20000;
+        let isUpdatingForbiddenFields = request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'username', 'heartCount']);
+
+        return isOwner && isNow && isValidContent && !isUpdatingForbiddenFields;
+      }
+
+      function canIncrementHearts(userId, postId) {
+				let isUpdatingHeartCountOnly = request.resource.data.diff(resource.data).affectedKeys().hasOnly(['heartCount']);
+        let currentUserUid = request.auth.uid;
+				let heartDocExistsAfter = existsAfter(/databases/$(database)/documents/users/$(userId)/posts/$(postId)/hearts/$(currentUserUid));
+        let heartDocExists = exists(/databases/$(database)/documents/users/$(userId)/posts/$(postId)/hearts/$(currentUserUid));
+				
+        // If adding heart - heart doc should not be existing but only be existing after the operation succeeds
+        let isHeartWillBeAdded= !heartDocExists && heartDocExistsAfter;
+        // If removing heart - heart doc should already exists
+        let isHeartWillBeRemoved = heartDocExists && !heartDocExistsAfter;
+
+        // request heart count - existing heart count
+        let countChange = request.resource.data.heartCount - resource.data.heartCount;
+        let validChange = countChange == 1 || countChange == -1;
+
+        let isAddingHeart = countChange == 1;
+
+        return isUpdatingHeartCountOnly && validChange && ( isAddingHeart ? isHeartWillBeAdded : isHeartWillBeRemoved );
+      }
     }
   }
 }

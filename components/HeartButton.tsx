@@ -1,38 +1,43 @@
 import { firestore, auth } from 'firebaseInit';
-import { doc } from 'firebase/firestore';
+import { doc, increment, writeBatch } from 'firebase/firestore';
 import { useDocument } from 'react-firebase-hooks/firestore';
 
 // Allows user to heart or like a post
-export default function Heart({ postRef }) {
+export default function HeartButton({ postRef }) {
   // Listen to heart document for currently logged in user
-  // const heartRef = postRef.collection('hearts').doc(auth.currentUser.uid);
-  const heartRef = doc(firestore, `hearts/${auth.currentUser.uid}`);
+  const heartRef = doc(
+    firestore,
+    `${postRef.path}/hearts/${auth.currentUser.uid}`
+  );
   const [heartDoc] = useDocument(heartRef);
 
   // Create a user-to-post relationship
-  // const addHeart = async () => {
-  //   const uid = auth.currentUser.uid;
-  //   const batch = firestore.batch();
+  const addHeart = async () => {
+    const uid = auth.currentUser.uid;
+    const batch = writeBatch(firestore);
 
-  //   batch.update(postRef, { heartCount: increment(1) });
-  //   batch.set(heartRef, { uid });
+    batch.update(postRef, { heartCount: increment(1) });
+    batch.set(heartRef, { uid });
 
-  //   await batch.commit();
-  // };
+    await batch.commit();
+  };
 
-  // // Remove a user-to-post relationship
-  // const removeHeart = async () => {
-  //   const batch = firestore.batch();
+  // Remove a user-to-post relationship
+  const removeHeart = async () => {
+    const batch = writeBatch(firestore);
 
-  //   batch.update(postRef, { heartCount: increment(-1) });
-  //   batch.delete(heartRef);
+    batch.update(postRef, { heartCount: increment(-1) });
+    batch.delete(heartRef);
 
-  //   await batch.commit();
-  // };
+    await batch.commit();
+  };
 
-  return heartDoc?.exists ? (
-    <button>💔 Unheart</button>
+  console.log({ hi: heartDoc?.exists });
+
+  // Log in user already hearted or not
+  return heartDoc?.exists() ? (
+    <button onClick={removeHeart}>💔 Unheart</button>
   ) : (
-    <button>💗 Heart</button>
+    <button onClick={addHeart}>💗 Heart</button>
   );
 }
