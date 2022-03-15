@@ -3,7 +3,10 @@ import AuthCheck from 'components/AuthCheck';
 export default function AdminPostsPage(props) {
   return (
     <main>
-      <AuthCheck></AuthCheck>
+      <AuthCheck>
+        <PostList />
+        <CreateNewPost />
+      </AuthCheck>
     </main>
   );
 }
