@@ -15,6 +15,10 @@ const PostForm = ({
     defaultValues,
     mode: 'onChange',
   });
+  console.log(
+    '🚀 ~ file: PostForm.tsx ~ line 18 ~ defaultValues',
+    defaultValues
+  );
   const { isValid, isDirty } = formState;
 
   const updatePost = async ({ content, published }) => {
@@ -61,7 +65,12 @@ const PostForm = ({
         )}
 
         <fieldset>
-          <input className={styles.checkbox} name="published" type="checkbox" />
+          <input
+            className={styles.checkbox}
+            {...register('published')}
+            name="published"
+            type="checkbox"
+          />
           <label>Published</label>
         </fieldset>
 

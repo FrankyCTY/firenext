@@ -37,12 +37,7 @@ export async function getUsersPosts(
 
   const postsRef = collection(firestore, `${userDocPath}/posts`);
 
-  const q = query(
-    postsRef,
-    where('published', '==', true),
-    orderBy('createdAt', 'desc'),
-    limit(qLimit)
-  );
+  const q = query(postsRef, orderBy('createdAt', 'desc'), limit(qLimit));
   const qSnapshot = await getDocs(q);
 
   qSnapshot.forEach((doc) => {
