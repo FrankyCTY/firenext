@@ -1,9 +1,9 @@
-import { initializeApp } from 'firebase/app';
+import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-const firebaseConfig = {
+const firebaseConfig: FirebaseOptions = {
   apiKey: 'AIzaSyCFBQiMguSfVnIlKtx9gd6tp5E0d3MMOgw',
   authDomain: 'fireship-demos-2c88d.firebaseapp.com',
   projectId: 'fireship-demos-2c88d',
