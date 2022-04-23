@@ -33,8 +33,8 @@ export default function Entry(props) {
 function SignInButton() {
   const signInWithGoogle = async () => {
     await signInWithPopup(authInstance, googleProvider)
-      .then((user) => {
-        console.log(user);
+      .then((credential) => {
+        console.log(credential);
       })
       .catch((error) => {
         console.error(error);
